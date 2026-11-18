@@ -3,6 +3,7 @@ package com.klinik.controller;
 import com.klinik.repository.PasienRepository;
 import com.klinik.repository.RekamMedisRepository;
 import com.klinik.view.LoginFrame;
+import com.klinik.main.MainApp;
 import com.klinik.view.MainDashboardFrame;
 
 import javax.swing.*;
@@ -13,8 +14,8 @@ public class MainController {
     private final RekamMedisRepository rekamMedisRepository;
 
     public MainController(MainDashboardFrame dashboardFrame,
-                          PasienRepository pasienRepository,
-                          RekamMedisRepository rekamMedisRepository) {
+        PasienRepository pasienRepository,
+        RekamMedisRepository rekamMedisRepository) {
         this.dashboardFrame = dashboardFrame;
         this.pasienRepository = pasienRepository;
         this.rekamMedisRepository = rekamMedisRepository;
@@ -31,13 +32,15 @@ public class MainController {
         int totalPasien = pasienRepository.countAll();
         int rekamMedisHariIni = rekamMedisRepository.countHariIni();
 
-        // Modul antrean dan pembayaran dikerjakan anggota kelompok lain (nilai awal sementara)
-        String antreanHariIni = "0 (Belum aktif)";
+        // Antrean diambil dari modul antrean (AntreanController milik MainApp)
+        int antreanHariIni = MainApp.antreanController.getDaftarAktif().size();
+
+        // Modul pembayaran dikerjakan anggota kelompok lain (nilai awal sementara)
         String totalTransaksi = "0 (Belum aktif)";
 
         dashboardFrame.updateStatistikCards(
                 String.valueOf(totalPasien),
-                antreanHariIni,
+                String.valueOf(antreanHariIni),
                 String.valueOf(rekamMedisHariIni),
                 totalTransaksi
         );

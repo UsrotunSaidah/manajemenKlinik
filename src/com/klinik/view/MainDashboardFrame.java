@@ -4,6 +4,7 @@ import com.klinik.controller.MainController;
 import com.klinik.repository.PasienRepository;
 import com.klinik.repository.RekamMedisRepository;
 import com.klinik.util.UIStyle;
+import com.klinik.main.MainApp;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -37,8 +38,8 @@ public class MainDashboardFrame extends JFrame {
     private JLabel lblValTransaksi;
 
     public MainDashboardFrame(String currentUser,
-                              PasienRepository pasienRepository,
-                              RekamMedisRepository rekamMedisRepository) {
+        PasienRepository pasienRepository,
+        RekamMedisRepository rekamMedisRepository) {
         this.currentUser = currentUser;
         this.pasienRepository = pasienRepository;
         this.rekamMedisRepository = rekamMedisRepository;
@@ -75,10 +76,10 @@ public class MainDashboardFrame extends JFrame {
                 "Modul Registrasi & Data Pasien",
                 "Halaman ini disiapkan untuk modul registrasi pasien baru dan manajemen data pasien (dikerjakan oleh anggota kelompok terkait)."
         ));
-        addPage(PAGE_ANTREAN, createPlaceholderPanel(
-                "Modul Pengelolaan Antrean Klinik",
-                "Halaman ini disiapkan untuk pengelolaan antrean pasien dan pemanggilan antrean (dikerjakan oleh anggota kelompok terkait)."
-        ));
+
+
+        addPage(PAGE_ANTREAN, new KelolaAntreanPanel(MainApp.antreanController, pasienRepository::findAll));
+
         addPage(PAGE_APOTEK, createPlaceholderPanel(
                 "Modul Apotek & Pemrosesan Resep",
                 "Halaman ini disiapkan untuk pengelolaan stok obat dan pemrosesan resep dokter (dikerjakan oleh anggota kelompok terkait)."
@@ -205,7 +206,7 @@ public class MainDashboardFrame extends JFrame {
         lblValTransaksi = new JLabel("0");
 
         statsGrid.add(createStatCard("Total Pasien", lblValTotalPasien, "Terdaftar di repository"));
-        statsGrid.add(createStatCard("Antrean Hari Ini", lblValAntrean, "Data sementara modul antrean"));
+        statsGrid.add(createStatCard("Antrean Hari Ini", lblValAntrean, "Menunggu & sedang diperiksa"));
         statsGrid.add(createStatCard("Rekam Medis Hari Ini", lblValRekamMedis, "Tersimpan hari ini"));
         statsGrid.add(createStatCard("Total Transaksi", lblValTransaksi, "Data sementara modul kasir"));
 
