@@ -1,0 +1,4 @@
+bin/
+*.class
+data/*.csv
+data/pasien_sequence.txt
