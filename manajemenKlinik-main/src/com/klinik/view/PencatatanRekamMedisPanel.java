@@ -7,6 +7,8 @@ import com.klinik.repository.PasienRepository;
 import com.klinik.repository.RekamMedisRepository;
 import com.klinik.util.UIStyle;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class PencatatanRekamMedisPanel extends JPanel {
     private final RekamMedisController controller;
+    private final PasienRepository pasienRepository;
 
     // Komponen Pencarian & Identitas Pasien
     private JTextField txtCariPasien;
@@ -32,8 +35,10 @@ public class PencatatanRekamMedisPanel extends JPanel {
     private JTextArea txtCatatan;
     private JButton btnSimpan;
     private JButton btnReset;
+    private PasienAutocompleteDropdown autocomplete;
 
     public PencatatanRekamMedisPanel(PasienRepository pasienRepository, RekamMedisRepository rekamMedisRepository) {
+        this.pasienRepository = pasienRepository;
         this.controller = new RekamMedisController(this, pasienRepository, rekamMedisRepository);
         initComponents();
     }
@@ -63,6 +68,12 @@ public class PencatatanRekamMedisPanel extends JPanel {
         splitContent.add(buildLeftPasienPanel());
         splitContent.add(buildRightFormPanel());
         add(splitContent, BorderLayout.CENTER);
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                SwingUtilities.invokeLater(() -> autocomplete.showForPanel());
+            }
+        });
     }
 
     private JPanel buildLeftPasienPanel() {
@@ -88,6 +99,11 @@ public class PencatatanRekamMedisPanel extends JPanel {
         txtCariPasien.setToolTipText("Masukkan Nama atau NIK pasien (contoh: Budi atau 337201...)");
         UIStyle.styleTextField(txtCariPasien);
         txtCariPasien.addActionListener(e -> controller.cariPasien(txtCariPasien.getText()));
+        autocomplete = new PasienAutocompleteDropdown(
+                txtCariPasien,
+                pasienRepository,
+                controller::pilihPasien
+        );
 
         gbc.gridy = 1;
         gbc.gridwidth = 1;

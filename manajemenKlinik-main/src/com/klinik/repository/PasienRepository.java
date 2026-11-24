@@ -224,7 +224,9 @@ public class PasienRepository {
         }
         String keyLower = keyword.trim().toLowerCase();
         for (Pasien p : findAll()) {
-            if (p.getNama().toLowerCase().contains(keyLower) || p.getNik().contains(keyLower)) {
+            if (p.getNama().toLowerCase().contains(keyLower)
+                    || p.getNik().toLowerCase().contains(keyLower)
+                    || p.getId().toLowerCase().contains(keyLower)) {
                 hasil.add(p);
             }
         }

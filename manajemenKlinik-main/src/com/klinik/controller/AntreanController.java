@@ -3,6 +3,7 @@ package com.klinik.controller;
 import com.klinik.exception.AntreanKosongException;
 import com.klinik.model.Antrean;
 import com.klinik.model.Pasien;
+import com.klinik.model.PasienSedangDipanggil;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,6 +44,7 @@ public class AntreanController {
         }
         sedangDiperiksa = menunggu.poll();
         sedangDiperiksa.setStatus(Antrean.Status.DALAM_PEMERIKSAAN);
+        PasienSedangDipanggil.getInstance().set(sedangDiperiksa.getPasien(), sedangDiperiksa.getNomor());
         beritahu();
         return sedangDiperiksa;
     }
@@ -54,6 +56,7 @@ public class AntreanController {
         antreanTerakhirSelesai = sedangDiperiksa;
         aktif.remove(sedangDiperiksa);
         sedangDiperiksa = null;
+        PasienSedangDipanggil.getInstance().clear();
         beritahu();
         return true;
     }
@@ -83,6 +86,7 @@ public class AntreanController {
         sedangDiperiksa = null;
         antreanTerakhirSelesai = null;
         counter = 0;
+        PasienSedangDipanggil.getInstance().clear();
         beritahu();
     }
 }
