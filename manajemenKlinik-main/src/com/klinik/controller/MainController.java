@@ -66,14 +66,6 @@ public class MainController {
         }
     }
 
-    public void resetSemuaData() throws IOException {
-        rekamMedisRepository.deleteAll();
-        transaksiRepository.deleteAll();
-        pasienRepository.deleteAll();
-        MainApp.antreanController.kosongkanAntrean();
-        dashboardFrame.refreshSetelahResetData();
-    }
-
     public void handleLogout() {
         int konfirmasi = JOptionPane.showConfirmDialog(
                 dashboardFrame,

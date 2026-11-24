@@ -190,15 +190,9 @@ public class MainDashboardFrame extends JFrame {
         lblDesc.setFont(UIStyle.FONT_BODY);
         lblDesc.setForeground(UIStyle.TEXT_SECONDARY);
 
-        JButton btnResetSemuaData = UIStyle.createDangerButton("Reset Semua Data");
-        btnResetSemuaData.setToolTipText(
-                "Hapus seluruh pasien, rekam medis, transaksi, dan antrean aktif");
-        btnResetSemuaData.getAccessibleContext().setAccessibleName("Reset semua data klinik");
-        btnResetSemuaData.addActionListener(e -> konfirmasiResetSemuaData());
         JPanel descriptionRow = new JPanel(new BorderLayout(12, 0));
         descriptionRow.setBackground(UIStyle.BACKGROUND_COLOR);
         descriptionRow.add(lblDesc, BorderLayout.CENTER);
-        descriptionRow.add(btnResetSemuaData, BorderLayout.EAST);
 
         headerPanel.add(lblWelcome);
         headerPanel.add(descriptionRow);
@@ -396,62 +390,6 @@ public class MainDashboardFrame extends JFrame {
 
     public void refreshStatistik() {
         mainController.refreshStatistikDashboard();
-    }
-
-    private void konfirmasiResetSemuaData() {
-        int jumlahPasien = pasienRepository.countAll();
-        int jumlahRekamMedis = rekamMedisRepository.findAll().size();
-        int jumlahAntrean = MainApp.antreanController.getDaftarAktif().size();
-        int jumlahTransaksi;
-        try {
-            jumlahTransaksi = MainApp.transaksiRepository.findAll().size();
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Data transaksi tidak dapat dibaca: " + ex.getMessage(),
-                    "Gagal Membaca Data",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        String pesan = "Tindakan ini akan menghapus permanen:\n"
-                + "- " + jumlahPasien + " data pasien\n"
-                + "- " + jumlahRekamMedis + " rekam medis terkait\n"
-                + "- " + jumlahTransaksi + " transaksi pembayaran\n"
-                + "- " + jumlahAntrean + " antrean aktif\n\n"
-                + "Semua data tersebut akan dihapus permanen dan tidak dapat dibatalkan.";
-        Object[] pilihan = {"Batal", "Hapus Semua"};
-        int konfirmasi = JOptionPane.showOptionDialog(
-                this,
-                pesan,
-                "Konfirmasi Reset Semua Data",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.WARNING_MESSAGE,
-                null,
-                pilihan,
-                pilihan[0]
-        );
-        if (konfirmasi != 1) {
-            return;
-        }
-
-        try {
-            mainController.resetSemuaData();
-            JOptionPane.showMessageDialog(this,
-                    "Data pasien, rekam medis, transaksi, dan antrean aktif berhasil dihapus.",
-                    "Reset Data Berhasil",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException ex) {
-            registrasiPasienPanel.refreshDataPasien();
-            refreshStatistik();
-            JOptionPane.showMessageDialog(this,
-                    "Penghapusan data tidak selesai: " + ex.getMessage(),
-                    "Gagal Menghapus Data",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void refreshSetelahResetData() {
-        registrasiPasienPanel.refreshDataPasien();
-        refreshStatistik();
     }
 
     public void updateStatistikCards(
